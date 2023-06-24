@@ -1,5 +1,7 @@
 import { useContext } from "react";
 import { Formik, Form, Field } from "formik";
+import { GetServerSideProps } from "next";
+import { parseCookies } from "nookies";
 import * as yup from "yup";
 
 import { AuthContext } from "@/shared/contexts/Auth";
@@ -78,3 +80,26 @@ export default function Register() {
     </>
   );
 }
+
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  const { ["BearerToken"]: token } = parseCookies(ctx);
+
+  if (token) {
+    return {
+      redirect: {
+        destination: "/dashboard",
+        permanent: false,
+      },
+    };
+  }
+
+  let isLogin = false;
+
+  token ? (isLogin = true) : isLogin;
+
+  return {
+    props: {
+      isLogin,
+    },
+  };
+};

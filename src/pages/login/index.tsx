@@ -1,9 +1,12 @@
 import { useContext } from "react";
 import { Formik, Form, Field } from "formik";
+import { GetServerSideProps } from "next";
+import { parseCookies } from "nookies";
 import * as yup from "yup";
 
 import { AuthContext } from "@/shared/contexts/Auth";
 import { FormInput } from "@/shared/components/Input";
+import Router from "next/router";
 
 export default function Login() {
   const { login } = useContext(AuthContext);
@@ -17,8 +20,8 @@ export default function Login() {
   });
 
   const handleLogin = ({ email, password }: IAuthData) => {
-    login({ email, password }).then((res) => {
-      console.log(res);
+    login({ email, password }).then(async (res) => {
+      await Router.push("/dashboard");
     });
   };
 
@@ -65,3 +68,26 @@ export default function Login() {
     </>
   );
 }
+
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  const { ["BearerToken"]: token } = parseCookies(ctx);
+
+  if (token) {
+    return {
+      redirect: {
+        destination: "/dashboard",
+        permanent: false,
+      },
+    };
+  }
+
+  let isLogin = false;
+
+  token ? (isLogin = true) : isLogin;
+
+  return {
+    props: {
+      isLogin,
+    },
+  };
+};

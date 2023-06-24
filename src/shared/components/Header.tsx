@@ -1,5 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
+import { useContext, Fragment } from "react";
+import { AuthContext } from "../contexts/Auth";
 
 interface RoutesProps {
   href: string;
@@ -16,21 +18,40 @@ const Routes = ({ href, title }: RoutesProps) => {
   );
 };
 
-export const Header = () => {
-  const routes = [
+interface HeaderProps {
+  isLogin: boolean;
+}
+
+export const Header = ({ isLogin }: HeaderProps) => {
+  const { logout } = useContext(AuthContext);
+
+  const routesLoginFalse = [
     { title: "Entrar", href: "login" },
     { title: "Cadastrar-se", href: "register" },
-    { title: "Dashboard", href: "dashboard" },
   ];
+
+  const routesLoginTrue = [{ title: "Dashboard", href: "dashboard" }];
 
   return (
     <header className="flex items-center justify-between w-screen px-4 py-2 bg-background-600">
       <Image src="/img/logo.png" alt="" width={112} height={112} />
 
-      <ul className="flex gap-3">
-        {routes.map((route) => (
-          <Routes href={route.href} title={route.title} key={route.title} />
-        ))}
+      <ul className="flex gap-3 items-center">
+        {isLogin
+          ? routesLoginTrue.map((route) => (
+              <Fragment key={route.title}>
+                <Routes title={route.title} href={route.href} />
+                <button
+                  onClick={logout}
+                  className="py-2 px-4 bg-white rounded font-semibold"
+                >
+                  Sair
+                </button>
+              </Fragment>
+            ))
+          : routesLoginFalse.map((route) => (
+              <Routes title={route.title} href={route.href} key={route.title} />
+            ))}
       </ul>
     </header>
   );
