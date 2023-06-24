@@ -10,6 +10,11 @@ module.exports = {
       fontFamily: {
         sans: "Inter, sans-serif",
       },
+      colors: {
+        background: {
+          600: "#2d2d2d",
+        },
+      },
     },
   },
   plugins: [],

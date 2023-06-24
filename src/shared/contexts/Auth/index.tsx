@@ -39,7 +39,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const register = async ({ email, password, name }: IRegisterData) => {
     const requestRegister = await RegisterUser({ email, password, name });
 
-    if (requestRegister.status === 200) {
+    if (requestRegister.status === 201) {
       await Router.push("/login");
     }
 
