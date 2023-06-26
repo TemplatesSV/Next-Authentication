@@ -37,21 +37,23 @@ export const Header = ({ isLogin }: HeaderProps) => {
       <Image src="/img/logo.png" alt="" width={112} height={112} />
 
       <ul className="flex gap-3 items-center">
-        {isLogin
-          ? routesLoginTrue.map((route) => (
-              <Fragment key={route.title}>
-                <Routes title={route.title} href={route.href} />
-                <button
-                  onClick={logout}
-                  className="py-2 px-4 bg-white rounded font-semibold"
-                >
-                  Sair
-                </button>
-              </Fragment>
-            ))
-          : routesLoginFalse.map((route) => (
+        {isLogin ? (
+          <>
+            {routesLoginTrue.map((route) => (
               <Routes title={route.title} href={route.href} key={route.title} />
             ))}
+            <button
+              onClick={logout}
+              className="py-2 px-4 bg-white rounded font-semibold"
+            >
+              Sair
+            </button>
+          </>
+        ) : (
+          routesLoginFalse.map((route) => (
+            <Routes title={route.title} href={route.href} key={route.title} />
+          ))
+        )}
       </ul>
     </header>
   );
